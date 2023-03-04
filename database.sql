@@ -47,29 +47,6 @@ insert into transactions(book_name_id,User_name,ph_number,mail_id,book_take) val
 
 /*-----------------------------------------------------------------------------------------------------------*/
 
-
-CREATE TRIGGER before_insert_transactions
-BEFORE INSERT ON transactions
-FOR EACH ROW
-BEGIN
-update transactions set book_return=now() where transaction_id in(select transaction_id from transactions where book_name_id=NEW.book_name_id and book_return is NULL);
-END;
-
-/*---------------------------------------------------------------*/
-DELIMITER$$
-CREATE TRIGGER by_mistake
- INSERT ON transactions
-FOR EACH ROW
-BEGIN
-    IF (select availability from books_info where book_name_id = NEW.book_name_id)=0 THEN
-update transactions set book_return=now() where transaction_id in(select transaction_id from transactions where book_name_id=NEW.book_name_id and book_return is NULL);
-        
-    END IF;
-END$$
-DELIMITER;
-
-
-
 DELIMITER $$
 CREATE TRIGGER set_availability
 AFTER INSERT ON transactions
@@ -78,6 +55,14 @@ BEGIN
     UPDATE books_info set availability=0 where book_name_id=NEW.book_name_id;
 END$$
 DELIMITER;
+
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+update transactions set book_return=now() where transaction_id in(select transaction_id from transactions where book_name_id=book_name_id and book_return is NULL);
+
+
+
 
 
 
