@@ -21,11 +21,11 @@ app.get("/lib/:book_name_id",(req, res) => {
   try {
     const {book_name_id}=req.params;
     console.log(book_name_id);
-    const q=`SELECT * FROM books_info where book_name_id="${book_name_id}"`;
+    const q=`SELECT name,author,genre FROM books_info where book_name_id="${book_name_id}"`;
     console.log(q);
     pool.query(q, (err,records)=>{
 
-      console.log(records);
+      // console.log(records);
       res.json(records);
     }) 
     // console.log(allTodos)
@@ -36,8 +36,9 @@ app.get("/lib/:book_name_id",(req, res) => {
 });
 
 app.post("/lib", (req, res) => {
-    try {
+    try { 
         const {book_name_id,User_name,ph_number,mail_id}=req.body;
+        console.log(book_name_id);
         pool.query(`update transactions set book_return=now() where transaction_id in(select transaction_id from transactions where book_name_id="${book_name_id}" and book_return is NULL)`,(error,rest)=>{
           if (error) throw error;
           
@@ -49,6 +50,7 @@ app.post("/lib", (req, res) => {
           if(error) throw error;
           console.log("success",records.insertId);
           const msg=`insertion success with transaction id ${records.insertId}`
+          pool.query(`update books_info set availability=0 where book_name_id="${book_name_id}"`);
           res.send(msg);
 
         });
@@ -81,6 +83,7 @@ app.post("/lib", (req, res) => {
             res.send("successfully returned...");
             }
           });
+
 
         }
         

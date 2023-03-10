@@ -17,7 +17,7 @@ create database library;
 
 
 /*----------------------------------------------------------------------------------------------------*/
-LOAD DATA INFILE 'data.csv'
+LOAD DATA INFILE 'kkupload.csv'
 INTO TABLE books_info
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
@@ -29,18 +29,20 @@ insert into transactions(book_name_id,User_name,ph_number,mail_id,book_take) val
 
 CREATE TABLE books_info (
   book_name_id VARCHAR(50) primary key,
-  name VARCHAR(50) , -- this column can store Unicode characters, including non-English characters
-  author VARCHAR(50),
-  genre VARCHAR(50),
-  availability int default 1
+  name VARCHAR(250) , -- this column can store Unicode characters, including non-English characters
+  author VARCHAR(250),
+  genre VARCHAR(250)
 );
 
-insert into books_info(book_name_id,name,author,genre,availability) values('psychology of money','ಹಣದ ಮನೋವಿಜ್ಞಾನ','ಮೋರ್ಗನ್ ಹೌಸ್ಲ್','ಹಣಕಾಸು',1);
+ALTER TABLE books_info
+MODIFY COLUMN name VARCHAR(100);
+
+insert into books_info(book_name_id,name,author,genre,availability) values("psychology of money","ಹಣದ ಮನೋವಿಜ್ಞಾನ","ಮೋರ್ಗನ್ ಹೌಸ್ಲ್","ಹಣಕಾಸು",1);
 
 /*------------------------------------------------------------------------------------------------------*/
 
 
-create table transactions(transaction_id serial primary key,book_name_id VARCHAR(50) ,User_name varchar(100),ph_number varchar(15),mail_id varchar(50),book_take datetime,book_return datetime default null , FOREIGN KEY(book_name_id) references books_info(book_name_id) ON DELETE CASCADE);
+create table transactions(transaction_id serial primary key,book_name_id VARCHAR(50) ,User_name varchar(150),ph_number varchar(15),mail_id varchar(100),book_take datetime,book_return datetime default null , FOREIGN KEY(book_name_id) references books_info(book_name_id) ON DELETE CASCADE);
 insert into transactions(book_name_id,User_name,ph_number,mail_id,book_take,book_return) values('k1','hitesh bishnoi',4566,'h@gm.com',now(),now());
 
 insert into transactions(book_name_id,User_name,ph_number,mail_id,book_take) values('k1','hitesh bishnoi',4566,'h@gm.com',now());
@@ -66,3 +68,4 @@ update transactions set book_return=now() where transaction_id in(select transac
 
 
 
+cp backup_file.sql /var/lib/kkserver/
