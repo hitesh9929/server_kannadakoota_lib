@@ -61,7 +61,7 @@ DELIMITER;
 
 /*------------------------------------------------------------------------------------------------------------*/
 
-update transactions set book_return=now() where transaction_id in(select transaction_id from transactions where book_name_id=book_name_id and book_return is NULL);
+update transactions set book_return=now() where where book_name_id='kk001' and book_return is NULL;
 
 
 

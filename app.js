@@ -17,6 +17,19 @@ pool.connect((err)=>{
 });
 
 
+app.get("/available",(req,res)=>{
+  try {
+    const q='select name from books_info where availability=1';
+    pool.query(q,(err,names)=>{
+      res.json(names);
+    })
+  } catch (err) {
+    res.send("could not fetch data contact kk");
+    
+  }
+})
+
+
 app.get("/lib/:book_name_id",(req, res) => {
   try {
     const {book_name_id}=req.params;
