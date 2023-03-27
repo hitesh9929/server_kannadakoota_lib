@@ -19,7 +19,7 @@ pool.connect((err)=>{
 
 app.get("/available",(req,res)=>{
   try {
-    const q='select name from books_info where availability=1';
+    const q='SELECT DISTINCT name from books_info where availability=1';
     pool.query(q,(err,names)=>{
       res.json(names);
     })
